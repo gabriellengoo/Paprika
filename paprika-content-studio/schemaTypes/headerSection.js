@@ -74,6 +74,12 @@ export default {
               type: 'string',
               title: 'Caption',
             },
+            {
+              name: 'link',
+              type: 'url',
+              title: 'Image Link',
+              description: 'Optional URL the image should link to',
+            },
           ],
         },
       ],

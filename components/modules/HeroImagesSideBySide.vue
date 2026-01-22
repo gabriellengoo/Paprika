@@ -10,8 +10,14 @@
         <img
           v-if="imageUrl(image)"
           :src="imageUrl(image)"
-          :alt="image.alt || module.title || 'Paprika spread'"
+          :alt="imageAlt(image)"
         />
+        <figcaption
+          v-if="imageText(image)"
+          class="hero-images__caption"
+        >
+          {{ imageText(image) }}
+        </figcaption>
       </figure>
     </div>
   </section>
@@ -26,20 +32,49 @@ export default {
     },
   },
   methods: {
+    normalizeImage(image) {
+      if (!image) {
+        return null
+      }
+      if (image.image) {
+        return image.image
+      }
+      return image
+    },
     imageUrl(image) {
+      const normalized = this.normalizeImage(image)
+      if (!normalized) {
+        return ''
+      }
+      if (normalized.asset && normalized.asset.url) {
+        return normalized.asset.url
+      }
+      if (normalized.url) {
+        return normalized.url
+      }
+      return ''
+    },
+    imageAlt(image) {
+      if (!image) {
+        return this.module.title || 'Paprika spread'
+      }
+
+      if (image.caption) {
+        return image.caption
+      }
+
+      const normalized = this.normalizeImage(image)
+      if (normalized && normalized.alt) {
+        return normalized.alt
+      }
+
+      return this.module.title || 'Paprika spread'
+    },
+    imageText(image) {
       if (!image) {
         return ''
       }
-
-      if (image.asset && image.asset.url) {
-        return image.asset.url
-      }
-
-      if (image.url) {
-        return image.url
-      }
-
-      return ''
+      return image.caption || image.title || ''
     },
   },
 }

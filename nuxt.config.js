@@ -3,7 +3,7 @@ export default {
   // target: 'static',
   // devtools: { enabled: true },
   target: "server",
-
+  ssr: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "Paprika",

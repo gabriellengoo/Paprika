@@ -73,25 +73,67 @@
       </div>
 
       <div
-        v-if="module.featureImages && module.featureImages.length"
+        v-if="galleryImages.length"
         class="header-section__gallery"
       >
-        <figure
-          v-for="(image, index) in module.featureImages"
-          :key="image._key || index"
+        <div
+          class="header-section__gallery-track"
+          :style="trackStyle"
         >
-          <img
-            v-if="imageUrl(image)"
-            :src="imageUrl(image)"
-            :alt="imageAlt(image)"
-          />
-          <figcaption
-            v-if="image.caption"
-            class="header-section__caption"
+          <figure
+            v-for="(image, index) in galleryImages"
+            :key="image._key || index"
+            class="header-section__gallery-slide"
           >
-            {{ image.caption }}
-          </figcaption>
-        </figure>
+            <a
+              v-if="imageLink(image)"
+              :href="imageLink(image)"
+              class="header-section__gallery-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                v-if="imageUrl(image)"
+                :src="imageUrl(image)"
+                :alt="imageAlt(image)"
+              />
+            </a>
+            <img
+              v-else
+              v-if="imageUrl(image)"
+              :src="imageUrl(image)"
+              :alt="imageAlt(image)"
+            />
+            <figcaption
+              v-if="image.caption"
+              class="header-section__caption"
+            >
+              {{ image.caption }}
+            </figcaption>
+          </figure>
+        </div>
+
+        <div
+          v-if="hasMultipleGalleryImages"
+          class="header-section__gallery-actions"
+        >
+          <button
+            type="button"
+            class="header-section__gallery-action"
+            @click="prevImage"
+            aria-label="Previous image"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            class="header-section__gallery-action"
+            @click="nextImage"
+            aria-label="Next image"
+          >
+            →
+          </button>
+        </div>
       </div>
 
     
@@ -107,6 +149,34 @@ export default {
     module: {
       type: Object,
       required: true,
+    },
+  },
+  data() {
+    return {
+      currentImageIndex: 0,
+    }
+  },
+  computed: {
+    galleryImages() {
+      return this.module.featureImages || []
+    },
+    hasMultipleGalleryImages() {
+      return this.galleryImages.length > 1
+    },
+    trackStyle() {
+      return {
+        transform: `translateX(-${this.currentImageIndex * 100}%)`,
+      }
+    },
+  },
+  watch: {
+    galleryImages(newImages, oldImages) {
+      const prevLength = (oldImages || []).length
+      if (newImages.length !== prevLength) {
+        this.currentImageIndex = 0
+      } else if (this.currentImageIndex >= newImages.length) {
+        this.currentImageIndex = 0
+      }
     },
   },
   methods: {
@@ -138,6 +208,31 @@ export default {
         return normalizedImage.alt
       }
       return this.module.headline || 'Paprika image'
+    },
+    imageLink(image) {
+      const normalizedImage = this.normalizeImage(image)
+      if (normalizedImage && normalizedImage.link) {
+        return normalizedImage.link
+      }
+      if (image && image.link) {
+        return image.link
+      }
+      return ''
+    },
+    prevImage() {
+      const length = this.galleryImages.length
+      if (length < 2) {
+        return
+      }
+      this.currentImageIndex =
+        (this.currentImageIndex - 1 + length) % length
+    },
+    nextImage() {
+      const length = this.galleryImages.length
+      if (length < 2) {
+        return
+      }
+      this.currentImageIndex = (this.currentImageIndex + 1) % length
     },
   },
 }
