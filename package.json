@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.0",
+    "@nuxtjs/vercel-builder": "^0.25.0",
     "@sanity/cli": "^4.17.0",
     "babel-loader": "^8.4.1",
     "nuxt-gsap-module": "^1.5.0",
