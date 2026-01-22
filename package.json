@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
+    "build": "cross-env HOST=127.0.0.1 nuxt generate",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "cross-env HOST=127.0.0.1 nuxt generate"
   },
   "dependencies": {
     "@nuxt/image": "^0.6.0",
@@ -43,9 +43,9 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.0",
-    "@nuxtjs/vercel-builder": "^0.25.0",
     "@sanity/cli": "^4.17.0",
     "babel-loader": "^8.4.1",
+    "cross-env": "^10.1.0",
     "nuxt-gsap-module": "^1.5.0",
     "postcss": "^8.4.17",
     "tailwindcss": "^3.3.3",

@@ -2,7 +2,7 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   // target: 'static',
   // devtools: { enabled: true },
-  target: "server",
+  target: "static",
   ssr: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -24,6 +24,11 @@ export default {
 
   app: {
     baseURL: "/paprika/",
+  },
+
+  server: {
+    host: "127.0.0.1",
+    port: 3000,
   },
 
   // Alternatively, ensure static is used correctly
@@ -110,6 +115,10 @@ export default {
       },
     },
     // },
+  },
+
+  generate: {
+    fallback: true,
   },
 
   compatibilityDate: "2025-01-17",
