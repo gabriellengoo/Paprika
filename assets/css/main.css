@@ -95,6 +95,7 @@ body {
   display: flex;
   flex-direction: column;
   /* gap: 4rem; */
+  min-height: 100vh;
 }
 
 .page-shell__empty {
@@ -311,8 +312,6 @@ body {
   grid-template-columns: minmax(18vw, 32vw) minmax(0, 1fr);
   padding: 1.5vw 0;
   align-items: flex-start;
-      height: 65vh;
-          height: 100%;
 }
 
 .header-section__card {
@@ -1189,9 +1188,28 @@ letter-spacing: -0.1em;
     font-size: 0.85rem;
   }
 
+  .header-section__links a {
+    font-size: clamp(1rem, 2.6vw, 1.1rem);
+  }
+
   .header-section__cta {
-    width: clamp(40px, 15vw, 80px);
-    height: clamp(40px, 15vw, 80px);
+    width: clamp(48px, 18vw, 96px);
+    height: clamp(48px, 18vw, 96px);
+  }
+
+  .paprika-magazine-container {
+    font-size: clamp(1rem, 3vw, 1.1rem);
+    margin-top: 0.5rem;
+  }
+
+  .header-section__label,
+  .header-section__info-line span,
+  .header-section__caption {
+    font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+  }
+
+  .qa-entry__eyebrow {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
   }
 
   .header-section__eyebrow {
@@ -1283,6 +1301,14 @@ letter-spacing: -0.1em;
     column-gap: 0;
   }
 
+  .support-section__detail-title {
+    font-size: clamp(0.95rem, 3vw, 1.05rem);
+  }
+
+  .support-section__detail-text {
+    font-size: clamp(0.95rem, 3.2vw, 1.05rem);
+  }
+
   .closing-section {
     padding: clamp(1.5rem, 5vw, 3rem) clamp(1rem, 3vw, 1.5rem);
   }
@@ -1313,6 +1339,10 @@ letter-spacing: -0.1em;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     text-align: left;
+  }
+
+  .closing-section__footer-item {
+    font-size: clamp(0.95rem, 3vw, 1.1rem);
   }
 }
 

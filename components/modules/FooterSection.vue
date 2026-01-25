@@ -252,13 +252,37 @@ export default {
 @media (max-width: 768px) {
   .footer-section__content {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
   }
   .footer-section__column {
     width: 100%;
+    text-align: center;
+  }
+  .footer-section__contact-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.2rem;
+    font-size: clamp(0.95rem, 3vw, 1.1rem);
+  }
+  .footer-section__social {
+    align-items: center;
+    gap: 0.25rem;
   }
   .footer-section__social-item {
-    font-size: 20px;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+  }
+  .footer-section__podcast-title {
+    font-size: clamp(0.95rem, 3.2vw, 1.15rem);
+  }
+  .footer-section__podcast-platforms {
+    font-size: clamp(0.85rem, 3vw, 1rem);
+  }
+  .footer-section__meta {
+    align-items: center;
   }
 }
 </style>
