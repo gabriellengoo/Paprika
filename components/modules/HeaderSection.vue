@@ -46,30 +46,78 @@
       <p v-if="module.tagline" class="header-section__eyebrow">
         {{ module.tagline }}
       </p>
-      <h1>{{ module.headline }}</h1>
-      <div
+      <h1
+        v-if="module.headline"
+        class="header-section__headline"
+        :aria-label="module.headline"
+        role="text"
+      >
+        <span
+          class="header-section__headline-track"
+          aria-hidden="true"
+          ref="headlineTrack"
+        >
+          <span>{{ module.headline }}</span>
+          <span>{{ module.headline }}</span>
+        </span>
+      </h1>
+      <!-- <div
         v-if="module.description && module.description.length"
         class="header-section__description"
         v-html="$portableText(module.description)"
-      />
+      /> -->
+      <div class="paprika-magazine-container">
+<span>первый глянцевый выпуск журнала</span>
+<span class="paprika-magazine"> Paprika Magazine — «Silent Riot»</span>
+</div>
     </div>
 
     <div class="header-section__meta">
       <div class="header-section__card">
-        <a
+     <div>
+         <a
           v-if="module.preOrderButton && module.preOrderButton.label"
           class="header-section__pill"
           :href="module.preOrderButton.url || '#'"
         >
           {{ module.preOrderButton.label }}
         </a>
-        <span class="header-section__label">{{ module.preOrderLabel }}</span>
-
-        <div
-          v-if="module.infoBlock && module.infoBlock.length"
-          class="header-section__info-block"
-          v-html="$portableText(module.infoBlock)"
+        <p class="header-section__label">{{ module.preOrderLabel }}</p>
+        <img
+          src="/assets/digimg.svg"
+          alt="Digital illustration"
+          class="header-section__dig-image"
         />
+     </div>
+
+      <div
+        v-if="infoBlockLines.length"
+        class="header-section__info-block"
+      >
+        <p
+          v-for="(line, index) in infoBlockLines"
+          :key="`info-line-${index}`"
+          class="header-section__info-line"
+        >
+          <span
+            v-if="line.left"
+            class="header-section__info-line-left"
+          >
+            {{ line.left }}
+          </span>
+          <span
+            v-if="line.right"
+            class="header-section__info-line-right"
+          >
+            {{ line.right }}
+          </span>
+        </p>
+      </div>
+      <div
+        v-else-if="module.infoBlock && module.infoBlock.length"
+        class="header-section__info-block header-section__info-block--raw"
+        v-html="$portableText(module.infoBlock)"
+      />
       </div>
 
       <div
@@ -105,10 +153,18 @@
               :alt="imageAlt(image)"
             />
             <figcaption
-              v-if="image.caption"
+              v-if="image.caption || image.year"
               class="header-section__caption"
             >
-              {{ image.caption }}
+              <p
+                v-if="image.caption"
+                class="header-section__caption-text"
+              >
+                {{ image.caption }}
+          </p>
+              <p class="header-section__caption-year">
+                {{ image.year || '0000' }}
+              </p>
             </figcaption>
           </figure>
         </div>
@@ -120,18 +176,15 @@
           <button
             type="button"
             class="header-section__gallery-action"
-            @click="prevImage"
-            aria-label="Previous image"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            class="header-section__gallery-action"
             @click="nextImage"
             aria-label="Next image"
           >
-            →
+            <img
+              src="/assets/Arrow.svg"
+              alt=""
+              aria-hidden="true"
+              class="header-section__gallery-action-icon"
+            />
           </button>
         </div>
       </div>
@@ -154,7 +207,16 @@ export default {
   data() {
     return {
       currentImageIndex: 0,
+      headlineMarqueeFrame: null,
+      headlineMarqueePosition: 0,
+      headlineMarqueeSpeed: 0.3,
     }
+  },
+  mounted() {
+    this.startHeadlineMarquee()
+  },
+  beforeDestroy() {
+    this.stopHeadlineMarquee()
   },
   computed: {
     galleryImages() {
@@ -168,6 +230,81 @@ export default {
         transform: `translateX(-${this.currentImageIndex * 100}%)`,
       }
     },
+    infoBlockLines() {
+      const blocks = this.module.infoBlock || []
+      const lines = []
+
+      blocks.forEach((block) => {
+        let currentLineSegments = []
+
+        const pushLine = () => {
+          if (currentLineSegments.length) {
+            lines.push([...currentLineSegments])
+            currentLineSegments = []
+          }
+        }
+
+        if (Array.isArray(block.children)) {
+          block.children.forEach((child) => {
+            if (!child.text) {
+              return
+            }
+
+            const textParts = child.text.split('\n')
+
+            textParts.forEach((part, index) => {
+              if (part) {
+                currentLineSegments.push({
+                  text: part,
+                  marks: child.marks || [],
+                })
+              }
+
+              if (index < textParts.length - 1) {
+                pushLine()
+              }
+            })
+          })
+        }
+
+        pushLine()
+      })
+
+      return lines
+        .map((segments) => {
+          const leftParts = []
+          const rightParts = []
+          let rightSectionStarted = false
+
+          segments.forEach((segment) => {
+            if (!segment.text) {
+              return
+            }
+
+            const hasUnderline =
+              Array.isArray(segment.marks) && segment.marks.includes('underline')
+
+            if (hasUnderline) {
+              rightSectionStarted = true
+              rightParts.push(segment.text)
+            } else if (rightSectionStarted) {
+              rightParts.push(segment.text)
+            } else {
+              leftParts.push(segment.text)
+            }
+          })
+
+          const left = leftParts.join('').trim()
+          const right = rightParts.join('').trim()
+
+          if (!left && !right) {
+            return null
+          }
+
+          return { left, right }
+        })
+        .filter(Boolean)
+    },
   },
   watch: {
     galleryImages(newImages, oldImages) {
@@ -178,8 +315,47 @@ export default {
         this.currentImageIndex = 0
       }
     },
+    'module.headline'(newHeadline, oldHeadline) {
+      if (newHeadline && newHeadline !== oldHeadline) {
+        this.restartHeadlineMarquee()
+      }
+    },
   },
   methods: {
+    startHeadlineMarquee() {
+      this.$nextTick(() => {
+        const track = this.$refs.headlineTrack
+        if (!track) {
+          return
+        }
+
+        const animate = () => {
+          const resetPoint = track.scrollWidth / 2
+          this.headlineMarqueePosition -= this.headlineMarqueeSpeed
+
+          if (Math.abs(this.headlineMarqueePosition) >= resetPoint) {
+            this.headlineMarqueePosition = 0
+          }
+
+          track.style.transform = `translateX(${this.headlineMarqueePosition}px)`
+          this.headlineMarqueeFrame = requestAnimationFrame(animate)
+        }
+
+        this.stopHeadlineMarquee()
+        this.headlineMarqueeFrame = requestAnimationFrame(animate)
+      })
+    },
+    stopHeadlineMarquee() {
+      if (this.headlineMarqueeFrame) {
+        cancelAnimationFrame(this.headlineMarqueeFrame)
+        this.headlineMarqueeFrame = null
+      }
+    },
+    restartHeadlineMarquee() {
+      this.stopHeadlineMarquee()
+      this.headlineMarqueePosition = 0
+      this.startHeadlineMarquee()
+    },
     normalizeImage(image) {
       if (image && image.image) {
         return image.image

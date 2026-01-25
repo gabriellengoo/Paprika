@@ -75,6 +75,12 @@ export default {
               title: 'Caption',
             },
             {
+              name: 'year',
+              type: 'string',
+              title: 'Year',
+              description: 'Optional year to display alongside the caption',
+            },
+            {
               name: 'link',
               type: 'url',
               title: 'Image Link',

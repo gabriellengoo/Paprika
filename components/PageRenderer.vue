@@ -6,7 +6,7 @@
         v-if="componentMap[block._type]"
         :key="block._key || index"
         :is="componentMap[block._type]"
-        :module="block"
+        v-bind="componentProps(block, index)"
       />
     </template>
 
@@ -67,6 +67,21 @@ export default {
     },
     hasModules() {
       return this.page && Array.isArray(this.page.modules) && this.page.modules.length > 0
+    },
+    firstEditorialIndex() {
+      if (!this.page || !Array.isArray(this.page.modules)) {
+        return -1
+      }
+      return this.page.modules.findIndex((module) => module._type === 'editorialText')
+    },
+  },
+  methods: {
+    componentProps(block, index) {
+      const props = { module: block }
+      if (block._type === 'editorialText' && index === this.firstEditorialIndex) {
+        props.showIntro = true
+      }
+      return props
     },
   },
   watch: {

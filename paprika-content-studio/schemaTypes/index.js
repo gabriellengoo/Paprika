@@ -8,6 +8,7 @@ import heroImagesSideBySide from './heroImagesSideBySide'
 import headerSection from './headerSection'
 import qaSection from './qaSection'
 import closingSection from './closingSection'
+import footerSection from './footerSection'
 
 export const schemaTypes = [
   page,
@@ -19,4 +20,5 @@ export const schemaTypes = [
   headerSection,
   qaSection,
   closingSection,
+  footerSection,
 ]
