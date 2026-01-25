@@ -224,18 +224,32 @@ body {
 }
 
 .header-section__headline-track {
-  display: inline-flex;
+  display: flex;
+  width: 200%;
   min-width: 200%;
-  width: max-content;
+  gap: 0;
   /* font-weight: 700; */
   will-change: transform;
+  animation: header-marquee 24s linear infinite;
+  transform: translateX(0);
 }
 
 .header-section__headline-track span {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  min-width: 100%;
+  justify-content: center;
+  flex: 0 0 50%;
   padding-right: 0;
+  white-space: nowrap;
+}
+
+@keyframes header-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .paprika-magazine-container {

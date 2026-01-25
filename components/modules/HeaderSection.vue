@@ -55,7 +55,6 @@
         <span
           class="header-section__headline-track"
           aria-hidden="true"
-          ref="headlineTrack"
         >
           <span>{{ module.headline }}</span>
           <span>{{ module.headline }}</span>
@@ -207,16 +206,7 @@ export default {
   data() {
     return {
       currentImageIndex: 0,
-      headlineMarqueeFrame: null,
-      headlineMarqueePosition: 0,
-      headlineMarqueeSpeed: 0.3,
     }
-  },
-  mounted() {
-    this.startHeadlineMarquee()
-  },
-  beforeDestroy() {
-    this.stopHeadlineMarquee()
   },
   computed: {
     galleryImages() {
@@ -315,47 +305,8 @@ export default {
         this.currentImageIndex = 0
       }
     },
-    'module.headline'(newHeadline, oldHeadline) {
-      if (newHeadline && newHeadline !== oldHeadline) {
-        this.restartHeadlineMarquee()
-      }
-    },
   },
   methods: {
-    startHeadlineMarquee() {
-      this.$nextTick(() => {
-        const track = this.$refs.headlineTrack
-        if (!track) {
-          return
-        }
-
-        const animate = () => {
-          const resetPoint = track.scrollWidth / 2
-          this.headlineMarqueePosition -= this.headlineMarqueeSpeed
-
-          if (Math.abs(this.headlineMarqueePosition) >= resetPoint) {
-            this.headlineMarqueePosition = 0
-          }
-
-          track.style.transform = `translateX(${this.headlineMarqueePosition}px)`
-          this.headlineMarqueeFrame = requestAnimationFrame(animate)
-        }
-
-        this.stopHeadlineMarquee()
-        this.headlineMarqueeFrame = requestAnimationFrame(animate)
-      })
-    },
-    stopHeadlineMarquee() {
-      if (this.headlineMarqueeFrame) {
-        cancelAnimationFrame(this.headlineMarqueeFrame)
-        this.headlineMarqueeFrame = null
-      }
-    },
-    restartHeadlineMarquee() {
-      this.stopHeadlineMarquee()
-      this.headlineMarqueePosition = 0
-      this.startHeadlineMarquee()
-    },
     normalizeImage(image) {
       if (image && image.image) {
         return image.image
