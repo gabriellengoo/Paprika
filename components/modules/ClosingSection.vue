@@ -30,6 +30,7 @@
               v-for="(row, rowIndex) in column.rows"
               :key="row._key || `${columnIndex}-${rowIndex}`"
               class="closing-section__row"
+              :class="{ 'closing-section__row--margin': row.marginAfterRow }"
             >
               <span class="closing-section__row-label">{{ row.label }}</span>
               <span class="closing-section__row-value">{{ row.value }}</span>
@@ -86,10 +87,47 @@ export default {
       return this.module.headline || 'Closing section image'
     },
     columns() {
-      if (Array.isArray(this.module.columns)) {
-        return this.module.columns.slice(0, 2)
+      if (!Array.isArray(this.module.columns)) {
+        return []
       }
-      return []
+      return this.module.columns.slice(0, 2).map((column) => ({
+        ...column,
+        rows: this.normalizeRows(column.rows),
+      }))
+    },
+  },
+  methods: {
+    normalizeRows(rows) {
+      const normalizedRows = (Array.isArray(rows) ? rows : []).map((row) => ({
+        ...row,
+        marginAfterRow: false,
+      }))
+
+      for (let i = 0; i < normalizedRows.length; i += 1) {
+        const currentHasLabel = Boolean(
+          normalizedRows[i].label && String(normalizedRows[i].label).trim()
+        )
+
+        if (!currentHasLabel) {
+          continue
+        }
+
+        let lastIndex = i
+        for (let next = i + 1; next < normalizedRows.length; next += 1) {
+          const nextHasLabel = Boolean(
+            normalizedRows[next].label && String(normalizedRows[next].label).trim()
+          )
+          if (nextHasLabel) {
+            break
+          }
+          lastIndex = next
+        }
+
+        normalizedRows[lastIndex].marginAfterRow = true
+        i = lastIndex
+      }
+
+      return normalizedRows
     },
   },
 }

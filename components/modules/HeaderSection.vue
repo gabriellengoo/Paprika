@@ -69,127 +69,152 @@
 <span>первый глянцевый выпуск журнала</span>
 <span class="paprika-magazine"> Paprika Magazine — «Silent Riot»</span>
 </div>
+     
     </div>
 
     <div class="header-section__meta">
       <div class="header-section__card">
-     <div>
-         <a
-          v-if="module.preOrderButton && module.preOrderButton.label"
-          class="header-section__pill"
-          :href="module.preOrderButton.url || '#'"
-        >
-          {{ module.preOrderButton.label }}
-        </a>
-        <p class="header-section__label">{{ module.preOrderLabel }}</p>
-        <img
-          src="/assets/digimg.svg"
-          alt="Digital illustration"
-          class="header-section__dig-image"
-        />
-     </div>
-
-      <div
-        v-if="infoBlockLines.length"
-        class="header-section__info-block"
-      >
-        <p
-          v-for="(line, index) in infoBlockLines"
-          :key="`info-line-${index}`"
-          class="header-section__info-line"
-        >
-          <span
-            v-if="line.left"
-            class="header-section__info-line-left"
+        <div>
+          <a
+            v-if="module.preOrderButton && module.preOrderButton.label"
+            class="header-section__pill"
+            :href="module.preOrderButton.url || '#'"
           >
-            {{ line.left }}
-          </span>
-          <span
-            v-if="line.right"
-            class="header-section__info-line-right"
-          >
-            {{ line.right }}
-          </span>
-        </p>
-      </div>
-      <div
-        v-else-if="module.infoBlock && module.infoBlock.length"
-        class="header-section__info-block header-section__info-block--raw"
-        v-html="$portableText(module.infoBlock)"
-      />
-      </div>
+            {{ module.preOrderButton.label }}
+          </a>
+          <p class="header-section__label">{{ module.preOrderLabel }}</p>
+          <img
+            src="/assets/digimg.svg"
+            alt="Digital illustration"
+            class="header-section__dig-image"
+          />
+        </div>
 
-      <div
-        v-if="galleryImages.length"
-        class="header-section__gallery"
-      >
         <div
-          class="header-section__gallery-track"
-          :style="trackStyle"
+          v-if="infoBlockLines.length"
+          class="header-section__info-block"
         >
-          <figure
-            v-for="(image, index) in galleryImages"
-            :key="image._key || index"
-            class="header-section__gallery-slide"
+          <p
+            v-for="(line, index) in infoBlockLines"
+            :key="`info-line-${index}`"
+            class="header-section__info-line"
           >
-            <a
-              v-if="imageLink(image)"
-              :href="imageLink(image)"
-              class="header-section__gallery-link"
-              target="_blank"
-              rel="noopener noreferrer"
+            <span
+              v-if="line.left"
+              class="header-section__info-line-left"
             >
-              <img
-                v-if="imageUrl(image)"
-                :src="imageUrl(image)"
-                :alt="imageAlt(image)"
-              />
-            </a>
+              {{ line.left }}
+            </span>
+            <span
+              v-if="line.right"
+              class="header-section__info-line-right"
+            >
+              {{ line.right }}
+            </span>
+          </p>
+        </div>
+        <div
+          v-else-if="module.infoBlock && module.infoBlock.length"
+          class="header-section__info-block header-section__info-block--raw"
+          v-html="$portableText(module.infoBlock)"
+        />
+      </div>
+
+    <div
+      v-if="galleryImages.length"
+      class="header-section__gallery"
+      ref="gallery"
+    >
+      <div
+        class="header-section__gallery-track"
+        :style="trackStyle"
+        ref="galleryTrack"
+      >
+        <figure
+          v-for="(image, index) in galleryImages"
+          :key="image._key || index"
+          class="header-section__gallery-slide"
+        >
+          <a
+            v-if="imageLink(image)"
+            :href="imageLink(image)"
+            class="header-section__gallery-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
-              v-else
               v-if="imageUrl(image)"
               :src="imageUrl(image)"
               :alt="imageAlt(image)"
             />
-            <figcaption
-              v-if="image.caption || image.year"
-              class="header-section__caption"
-            >
-              <p
-                v-if="image.caption"
-                class="header-section__caption-text"
-              >
-                {{ image.caption }}
-          </p>
-              <p class="header-section__caption-year">
-                {{ image.year || '0000' }}
-              </p>
-            </figcaption>
-          </figure>
-        </div>
-
-        <div
-          v-if="hasMultipleGalleryImages"
-          class="header-section__gallery-actions"
-        >
-          <button
-            type="button"
-            class="header-section__gallery-action"
-            @click="nextImage"
-            aria-label="Next image"
+          </a>
+          <img
+            v-else
+            v-if="imageUrl(image)"
+            :src="imageUrl(image)"
+            :alt="imageAlt(image)"
+          />
+          <figcaption
+            v-if="image.caption || image.year"
+            class="header-section__caption"
           >
-            <img
-              src="/assets/Arrow.svg"
-              alt=""
-              aria-hidden="true"
-              class="header-section__gallery-action-icon"
-            />
-          </button>
-        </div>
+            <p
+              v-if="image.caption"
+              class="header-section__caption-text"
+            >
+              {{ image.caption }}
+            </p>
+            <p class="header-section__caption-year">
+              {{ image.year || '0000' }}
+            </p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div
+        v-if="hasMultipleGalleryImages"
+        class="header-section__gallery-actions"
+      >
+        <button
+          type="button"
+          class="header-section__gallery-action"
+          :disabled="!canAdvance"
+          @click="nextImage"
+          aria-label="Next image"
+        >
+          <img
+            src="/assets/Arrow.svg"
+            alt=""
+            aria-hidden="true"
+            class="header-section__gallery-action-icon"
+          />
+        </button>
+        <button
+          v-if="showBackArrow"
+          type="button"
+          class="header-section__gallery-action header-section__gallery-action--back"
+          @click="resetGallery"
+          aria-label="Back to first image"
+        >
+          <img
+            src="/assets/Arrow.svg"
+            alt=""
+            aria-hidden="true"
+            class="header-section__gallery-action-icon"
+          />
+        </button>
       </div>
 
     
     </div>
+    </div>
+      <p class="editorial-text__headline2">
+        Первый печатный выпуск,<br />
+        подготовленный командой<br />
+        энтузиастов из журнала<br />
+        Paprika.
+      </p>
+      <div class="text-parent"><div class="text"><span>Paprika — это независимый мультимедийный журнал о музыке, который уже четыре года делают 20 энтузиастов-волонтёров.</span> <span class="span"> Мы представляем кураторскую альтернативу алгоритмам и информационному шуму, поддерживая локальную сцену и создавая среду для осмысленного слушания.</span></div> <img alt="" src="/assets/telegram-cloud-photo-size-2-52-icon.jpg" class="telegram-cloud-photo-size-2-52-icon"></div>
    
   
   </header>
@@ -206,6 +231,7 @@ export default {
   data() {
     return {
       currentImageIndex: 0,
+      slideOffset: 0,
     }
   },
   computed: {
@@ -216,9 +242,24 @@ export default {
       return this.galleryImages.length > 1
     },
     trackStyle() {
+      const galleryRef = this.$refs ? this.$refs.gallery : null
+      const galleryWidth =
+        this.slideOffset || (galleryRef ? galleryRef.clientWidth : 0)
+      const translateX = galleryWidth
+        ? this.currentImageIndex * galleryWidth
+        : 0
       return {
-        transform: `translateX(-${this.currentImageIndex * 100}%)`,
+        transform: `translateX(-${translateX}px)`,
       }
+    },
+    canAdvance() {
+      return this.currentImageIndex < this.galleryImages.length - 1
+    },
+    showBackArrow() {
+      return (
+        this.hasMultipleGalleryImages &&
+        this.currentImageIndex === this.galleryImages.length - 1
+      )
     },
     infoBlockLines() {
       const blocks = this.module.infoBlock || []
@@ -304,7 +345,19 @@ export default {
       } else if (this.currentImageIndex >= newImages.length) {
         this.currentImageIndex = 0
       }
+      this.$nextTick(this.updateGalleryOffset)
     },
+  },
+  mounted() {
+    this.$nextTick(this.updateGalleryOffset)
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", this.updateGalleryOffset)
+    }
+  },
+  beforeDestroy() {
+    if (typeof window !== "undefined") {
+      window.removeEventListener("resize", this.updateGalleryOffset)
+    }
   },
   methods: {
     normalizeImage(image) {
@@ -346,6 +399,30 @@ export default {
       }
       return ''
     },
+    resetGallery() {
+      this.currentImageIndex = 0
+    },
+    updateGalleryOffset() {
+      if (typeof window === "undefined") {
+        return
+      }
+      if (
+        !this.$refs ||
+        !this.$refs.gallery ||
+        !this.$refs.galleryTrack
+      ) {
+        return
+      }
+      const gallery = this.$refs.gallery
+      const computedStyles = window.getComputedStyle(
+        this.$refs.galleryTrack
+      )
+      const gap = parseFloat(computedStyles.gap) || 0
+      const offset = gallery.clientWidth + gap
+      if (offset && offset !== this.slideOffset) {
+        this.slideOffset = offset
+      }
+    },
     prevImage() {
       const length = this.galleryImages.length
       if (length < 2) {
@@ -359,7 +436,9 @@ export default {
       if (length < 2) {
         return
       }
-      this.currentImageIndex = (this.currentImageIndex + 1) % length
+      if (this.currentImageIndex < length - 1) {
+        this.currentImageIndex += 1
+      }
     },
   },
 }

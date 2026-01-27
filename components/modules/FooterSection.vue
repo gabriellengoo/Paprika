@@ -28,9 +28,23 @@
               rel="noreferrer"
               class="footer-section__link"
             >
-              {{ item.label }}
+              <span class="footer-section__social-first">{{ item.labelFirst }}</span>
+              <span
+                v-if="item.labelRest"
+                class="footer-section__social-rest"
+              >
+                {{ item.labelRest }}
+              </span>
             </a>
-            <span v-else>{{ item.label }}</span>
+            <span v-else>
+              <span class="footer-section__social-first">{{ item.labelFirst }}</span>
+              <span
+                v-if="item.labelRest"
+                class="footer-section__social-rest"
+              >
+                {{ item.labelRest }}
+              </span>
+            </span>
           </p>
         </div>
         <div class="footer-section__podcast">
@@ -91,7 +105,26 @@ export default {
     },
     socialList() {
       const socials = this.footer?.socialLinks
-      return Array.isArray(socials) ? socials : []
+      if (!Array.isArray(socials)) {
+        return []
+      }
+      return socials.map((link) => {
+        const labelText = (link.label || '').trim()
+        if (!labelText) {
+          return {
+            ...link,
+            labelFirst: '',
+            labelRest: '',
+          }
+        }
+
+        const [first, ...restWords] = labelText.split(/\s+/)
+        return {
+          ...link,
+          labelFirst: first,
+          labelRest: restWords.join(' '),
+        }
+      })
     },
     footerStatusMessage() {
       if (this.isFooterLoading) {
@@ -142,17 +175,7 @@ export default {
     text-align: left;
 }
 
-.footer-section__column {
-/* flex: 1; */
-    min-width: 200px;
-    font-size: 1vw;
-    line-height: 1.5;
-    justify-content: left;
-    letter-spacing: 0.02em;
-    /* align-items: end;
-    display: flex;
-    flex-direction: column; */
-}
+
 
 .footer-section__contact{
      justify-content: right;
@@ -178,7 +201,7 @@ export default {
 }
 
 .footer-section__contact-row {
-  margin: 6px 0;
+  margin: 3px 0;
   font-size: 16px;
       font-size: 1vw;
   line-height: 1.5;
@@ -199,15 +222,20 @@ export default {
 .footer-section__social {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0px;
 }
 
 .footer-section__social-item {
   font-size: clamp(20px, 2vw, 24px);
       font-size: 2vw;
           font-size: 1.5vw;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.04em;
+          letter-spacing: -0.05em;
+}
+
+.footer-section__social-first {
+  margin-right: 1vw;
 }
 
 .footer-section__link {
@@ -233,13 +261,13 @@ export default {
 
 .footer-section__quote {
   font-style: italic;
-  color: #4f4f4f;
+  color:  #7e7e7e;
   margin-bottom: 6px;
 }
 
 .footer-section__copyright {
   letter-spacing: 0.05em;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .footer-section__fallback {

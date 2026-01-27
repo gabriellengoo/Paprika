@@ -78,8 +78,10 @@ export default {
   methods: {
     componentProps(block, index) {
       const props = { module: block }
-      if (block._type === 'editorialText' && index === this.firstEditorialIndex) {
-        props.showIntro = true
+      if (block._type === 'editorialText') {
+        const isFirstEditorial = index === this.firstEditorialIndex
+        props.showIntro = isFirstEditorial
+        props.isFirstEditorial = isFirstEditorial
       }
       return props
     },

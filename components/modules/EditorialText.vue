@@ -10,13 +10,13 @@
       {{ module.headline }}
     </h2>
 
-    <div v-if="showIntro" class="text-parent">
+    <!-- <div v-if="showIntro" class="text-parent">
    		<div class="text">
      			<span>Paprika — это независимый мультимедийный журнал о музыке, который уже четыре года делают 20 энтузиастов-волонтёров.</span>
      			<span class="span"> Мы представляем кураторскую альтернативу алгоритмам и информационному шуму, поддерживая локальную сцену и создавая среду для осмысленного слушания.</span>
    		</div>
    		<img class="telegram-cloud-photo-size-2-52-icon" alt="" src="/assets/telegram-cloud-photo-size-2-52-icon.jpg"/>
- 	</div>
+ 	</div> -->
     <div v-if="module.body && module.body.length" class="prose">
       <template v-if="module.headline && module.headlineBeforeBody">
         <div class="editorial-text__lead" v-html="$portableText([{ _type: 'block', children: [{ _type: 'span', text: module.headline || '' }] }])" />
