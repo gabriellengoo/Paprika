@@ -172,10 +172,11 @@
       </div>
 
       <div
-        v-if="hasMultipleGalleryImages"
+        v-if="hasMultipleGalleryImages && (showNextArrow || showBackArrow)"
         class="header-section__gallery-actions"
       >
         <button
+          v-if="showNextArrow"
           type="button"
           class="header-section__gallery-action"
           :disabled="!canAdvance"
@@ -232,6 +233,7 @@ export default {
     return {
       currentImageIndex: 0,
       slideOffset: 0,
+      forwardClicks: 0,
     }
   },
   computed: {
@@ -240,6 +242,9 @@ export default {
     },
     hasMultipleGalleryImages() {
       return this.galleryImages.length > 1
+    },
+    showNextArrow() {
+      return this.hasMultipleGalleryImages && this.canAdvance && this.forwardClicks < 2
     },
     trackStyle() {
       const galleryRef = this.$refs ? this.$refs.gallery : null
@@ -258,7 +263,8 @@ export default {
     showBackArrow() {
       return (
         this.hasMultipleGalleryImages &&
-        this.currentImageIndex === this.galleryImages.length - 1
+        (this.forwardClicks >= 2 ||
+          this.currentImageIndex === this.galleryImages.length - 1)
       )
     },
     infoBlockLines() {
@@ -342,8 +348,10 @@ export default {
       const prevLength = (oldImages || []).length
       if (newImages.length !== prevLength) {
         this.currentImageIndex = 0
+        this.forwardClicks = 0
       } else if (this.currentImageIndex >= newImages.length) {
         this.currentImageIndex = 0
+        this.forwardClicks = 0
       }
       this.$nextTick(this.updateGalleryOffset)
     },
@@ -401,6 +409,7 @@ export default {
     },
     resetGallery() {
       this.currentImageIndex = 0
+      this.forwardClicks = 0
     },
     updateGalleryOffset() {
       if (typeof window === "undefined") {
@@ -437,7 +446,11 @@ export default {
         return
       }
       if (this.currentImageIndex < length - 1) {
+        if (this.forwardClicks >= 2) {
+          return
+        }
         this.currentImageIndex += 1
+        this.forwardClicks += 1
       }
     },
   },
