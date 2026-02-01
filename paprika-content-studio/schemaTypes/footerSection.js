@@ -31,6 +31,26 @@ export default {
               title: 'URL (optional)',
               type: 'url',
             },
+            {
+              name: 'wordLinks',
+              title: 'Word Links',
+              type: 'array',
+              description:
+                'Provide one entry per word when you want each word to link somewhere different. Leave empty to fall back to the single label/url.',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    { name: 'label', title: 'Word', type: 'string' },
+                    {
+                      name: 'url',
+                      title: 'URL (optional)',
+                      type: 'url',
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         },
       ],

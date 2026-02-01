@@ -21,30 +21,53 @@
             :key="item._key || `${item.label}-${index}`"
             class="footer-section__social-item"
           >
-            <a
-              v-if="item.url"
-              :href="item.url"
-              target="_blank"
-              rel="noreferrer"
-              class="footer-section__link"
-            >
-              <span class="footer-section__social-first">{{ item.labelFirst }}</span>
-              <span
-                v-if="item.labelRest"
-                class="footer-section__social-rest"
+            <template v-if="item.wordLinks?.length">
+              <template v-for="(word, wordIndex) in item.wordLinks">
+                <a
+                  v-if="word.url"
+                  :key="`footer-word-${wordIndex}-${word.label}`"
+                  :href="word.url"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="footer-section__link footer-section__word-link"
+                >
+                  {{ word.label }}
+                </a>
+                <span
+                  v-else
+                  :key="`footer-word-${wordIndex}-${word.label}`"
+                  class="footer-section__social-first footer-section__word-link"
+                >
+                  {{ word.label }}
+                </span>
+              </template>
+            </template>
+            <template v-else>
+              <a
+                v-if="item.url"
+                :href="item.url"
+                target="_blank"
+                rel="noreferrer"
+                class="footer-section__link"
               >
-                {{ item.labelRest }}
+                <span class="footer-section__social-first">{{ item.labelFirst }}</span>
+                <span
+                  v-if="item.labelRest"
+                  class="footer-section__social-rest"
+                >
+                  {{ item.labelRest }}
+                </span>
+              </a>
+              <span v-else>
+                <span class="footer-section__social-first">{{ item.labelFirst }}</span>
+                <span
+                  v-if="item.labelRest"
+                  class="footer-section__social-rest"
+                >
+                  {{ item.labelRest }}
+                </span>
               </span>
-            </a>
-            <span v-else>
-              <span class="footer-section__social-first">{{ item.labelFirst }}</span>
-              <span
-                v-if="item.labelRest"
-                class="footer-section__social-rest"
-              >
-                {{ item.labelRest }}
-              </span>
-            </span>
+            </template>
           </p>
         </div>
         <div class="footer-section__podcast">
@@ -80,7 +103,11 @@ const footerQuery = `
   },
   socialLinks[]{
     label,
-    url
+    url,
+    wordLinks[]{
+      label,
+      url
+    }
   },
   podcastName,
   podcastPlatforms,
@@ -109,6 +136,22 @@ export default {
         return []
       }
       return socials.map((link) => {
+        const normalizedWordLinks = Array.isArray(link.wordLinks)
+          ? link.wordLinks
+              .map((word) => ({
+                label: (word?.label || '').trim(),
+                url: word?.url,
+              }))
+              .filter((word) => word.label)
+          : []
+
+        if (normalizedWordLinks.length) {
+          return {
+            ...link,
+            wordLinks: normalizedWordLinks,
+          }
+        }
+
         const labelText = (link.label || '').trim()
         if (!labelText) {
           return {
@@ -226,6 +269,11 @@ export default {
 }
 
 .footer-section__social-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
   font-size: clamp(20px, 2vw, 24px);
       font-size: 2vw;
           font-size: 1.5vw;
@@ -236,6 +284,15 @@ export default {
 
 .footer-section__social-first {
   margin-right: 1vw;
+}
+
+.footer-section__word-link {
+  font-size: inherit;
+  letter-spacing: inherit;
+  font-weight: inherit;
+  text-transform: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 .footer-section__link {
