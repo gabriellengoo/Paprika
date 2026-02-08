@@ -25,6 +25,12 @@
   --text-muted: #6e6e6e;
   --border-color: #d9d9d9;
   --panel-bg: #f4f4f4;
+  --header-scroll-offset: clamp(72px, 8vh, 104px);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-scroll-offset);
 }
 
 html,
@@ -124,17 +130,29 @@ body {
 }
 
 .header-section__nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1vw;
-  padding-bottom: 0rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1vw;
+    padding-bottom: 0rem;
+    /* border-bottom: 1px solid var(--border-color); */
+    /* text-transform: uppercase; */
+    position: fixed;
+    z-index: 100000;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: #f0f0f0;
+    font-size: 0.85rem;
+}
 
-  /* border-bottom: 1px solid var(--border-color); */
-  /* text-transform: uppercase; */
-  font-size: 0.85rem;
+.header-section__nav-spacer {
+  width: 100%;
+  flex-shrink: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .header-section__logo {
@@ -291,7 +309,7 @@ body {
 .header-section__eyebrow {
   position: fixed;
   left: 5px;
-  top: 40vh;
+  top: 55vh;
   transform: translateY(-50%) rotate(-90deg);
   transform-origin: left top;
   /* text-transform: uppercase; */
@@ -299,7 +317,7 @@ body {
     letter-spacing: 0.1em;
     color: #ffffff; */
   /* mix-blend-mode: difference; */
-  z-index: 9999;
+  z-index: 9999999;
   /* white-space: nowrap; */
   pointer-events: none;
 
@@ -1119,6 +1137,16 @@ display: flex;
     margin-bottom: 0;
 }
 
+.closing-section__row-link {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
 .closing-section__row--margin {
   margin-bottom: 2vw;
 }
@@ -1292,8 +1320,16 @@ letter-spacing: -0.1em;
     /* position: static; */
     /* transform: none; */
     margin-bottom: 0.5rem;
-    font-size: 0.5rem;
-  }
+  font-size: 0.5rem;
+}
+
+#editorial-text__headline2,
+#support,
+#closing,
+#team,
+#page-bottom {
+  scroll-margin-top: var(--header-scroll-offset);
+}
 
       .footer-section__quote {
         font-size: 2.5vw;

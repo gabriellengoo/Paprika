@@ -1,6 +1,6 @@
 <template>
   <header class="module header-section">
-    <div class="header-section__nav">
+    <div class="header-section__nav" ref="nav">
       <img
         src="/logo.svg"
         class="header-section__logo-image"
@@ -8,13 +8,10 @@
       <!-- <p class="header-section__logo">{{ module.logo || 'Paprika' }}</p> -->
 
       <nav class="header-section__links" aria-label="Primary navigation">
-        <a
-          v-for="(link, index) in module.navigation || []"
-          :key="link._key || index"
-          :href="link.url || '#'"
-        >
-          {{ link.label }}
-        </a>
+        <a href="#editorial-text__headline2">about</a>
+        <a href="#closing">support</a>
+        <a href="#support">team</a>
+        <a href="#page-bottom">contacts</a>
       </nav>
 
       <div
@@ -41,6 +38,11 @@
         </a>
       </div>
     </div>
+    <div
+      class="header-section__nav-spacer"
+      :style="{ height: `${navHeight}px` }"
+      aria-hidden="true"
+    />
 
     <div class="header-section__title">
       <p v-if="module.tagline" class="header-section__eyebrow">
@@ -209,7 +211,7 @@
     
     </div>
     </div>
-      <p class="editorial-text__headline2">
+      <p id="editorial-text__headline2" class="editorial-text__headline2">
         Первый печатный выпуск,<br />
         подготовленный командой<br />
         энтузиастов из журнала<br />
@@ -234,6 +236,7 @@ export default {
       currentImageIndex: 0,
       slideOffset: 0,
       forwardClicks: 0,
+      navHeight: 0,
     }
   },
   computed: {
@@ -357,14 +360,17 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(this.updateGalleryOffset)
+    this.$nextTick(() => {
+      this.updateGalleryOffset()
+      this.updateNavHeight()
+    })
     if (typeof window !== "undefined") {
-      window.addEventListener("resize", this.updateGalleryOffset)
+      window.addEventListener("resize", this.handleResize)
     }
   },
   beforeDestroy() {
     if (typeof window !== "undefined") {
-      window.removeEventListener("resize", this.updateGalleryOffset)
+      window.removeEventListener("resize", this.handleResize)
     }
   },
   methods: {
@@ -430,6 +436,23 @@ export default {
       const offset = gallery.clientWidth + gap
       if (offset && offset !== this.slideOffset) {
         this.slideOffset = offset
+      }
+    },
+    handleResize() {
+      this.updateGalleryOffset()
+      this.updateNavHeight()
+    },
+    updateNavHeight() {
+      if (typeof window === "undefined") {
+        return
+      }
+      if (!this.$refs || !this.$refs.nav) {
+        return
+      }
+      const navEl = this.$refs.nav
+      const height = navEl ? navEl.getBoundingClientRect().height : 0
+      if (height !== this.navHeight) {
+        this.navHeight = height
       }
     },
     prevImage() {

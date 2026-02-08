@@ -39,6 +39,7 @@ export default {
                   fields: [
                     { name: 'label', type: 'string', title: 'Label' },
                     { name: 'value', type: 'string', title: 'Value' },
+                    { name: 'url', type: 'url', title: 'Link URL' },
                   ],
                 },
               ],
@@ -64,4 +65,3 @@ export default {
     },
   ],
 }
-

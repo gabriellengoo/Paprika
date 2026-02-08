@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer-section">
+  <footer id="page-bottom" class="footer-section">
     <div v-if="footer" class="footer-section__content">
       <div class="footer-section__column footer-section__contact">
         <p

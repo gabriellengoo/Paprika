@@ -1,5 +1,5 @@
 <template>
-  <section class="module support-section">
+  <section id="support" class="module support-section">
     <div v-if="heroImageUrl" class="support-section__hero">
       <img :src="heroImageUrl" :alt="heroImageAlt" />
     </div>

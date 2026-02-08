@@ -1,5 +1,5 @@
 <template>
-  <section class="module closing-section">
+  <section id="closing" class="module closing-section">
     <div v-if="heroImageUrl" class="closing-section__hero">
       <img :src="heroImageUrl" :alt="heroImageAlt" />
     </div>
@@ -32,8 +32,19 @@
               class="closing-section__row"
               :class="{ 'closing-section__row--margin': row.marginAfterRow }"
             >
-              <span class="closing-section__row-label">{{ row.label }}</span>
-              <span class="closing-section__row-value">{{ row.value }}</span>
+              <template v-if="row.url">
+                <a
+                  :href="row.url"
+                  class="closing-section__row-link"
+                >
+                  <span class="closing-section__row-label">{{ row.label }}</span>
+                  <span class="closing-section__row-value">{{ row.value }}</span>
+                </a>
+              </template>
+              <template v-else>
+                <span class="closing-section__row-label">{{ row.label }}</span>
+                <span class="closing-section__row-value">{{ row.value }}</span>
+              </template>
             </li>
           </ul>
         </div>

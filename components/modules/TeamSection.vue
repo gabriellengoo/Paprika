@@ -1,5 +1,5 @@
 <template>
-  <section class="module team-section">
+  <section id="team" class="module team-section">
     <div v-if="module.members && module.members.length" class="team-section__grid">
       <article
         v-for="(member, index) in module.members"
