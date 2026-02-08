@@ -1,10 +1,17 @@
 <template>
-  <header class="module header-section">
+  <header class="module header-section" id="top">
     <div class="header-section__nav" ref="nav">
-      <img
-        src="/logo.svg"
-        class="header-section__logo-image"
-      />
+      <a
+        href="#top"
+        class="header-section__logo-link"
+        aria-label="Scroll to top"
+      >
+        <img
+          src="/logo.svg"
+          class="header-section__logo-image"
+          alt="Paprika logo"
+        />
+      </a>
       <!-- <p class="header-section__logo">{{ module.logo || 'Paprika' }}</p> -->
 
       <nav class="header-section__links" aria-label="Primary navigation">
